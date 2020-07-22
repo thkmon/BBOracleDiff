@@ -4,6 +4,6 @@ public class CommonConst {
 
 	
 	public static String version = "200722";
-	public static String propFilePath = "data/info.properties";
+	public static String propFilePath = "option.properties";
 	public static String compareToolPath = "";
 }
