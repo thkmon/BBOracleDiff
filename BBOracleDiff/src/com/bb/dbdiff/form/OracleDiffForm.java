@@ -58,6 +58,9 @@ public class OracleDiffForm {
 	private static Text textBoxPassword2 = null;
 	
 	
+	public static boolean bSaveDatabase1 = false;
+	public static boolean bSaveDatabase2 = false;
+	
 	public static String host1 = "";
 	public static String port1 = "";
 	public static String sid1 = "";
@@ -262,6 +265,9 @@ public class OracleDiffForm {
 			
 			@Override
 			public void mouseDown(MouseEvent arg0) {
+				bSaveDatabase1 = false;
+				bSaveDatabase2 = false;
+				
 				OracleInfoController oracleInfoCtrl = new OracleInfoController();
 				
 				host1 = textBoxHost1.getText().trim();
@@ -285,6 +291,9 @@ public class OracleDiffForm {
 				try {
 					if (database1 != null) {
 						filePath1 = FileUtil.writeFile(database1.toString(), false);
+						if (filePath1 != null && filePath1.length() > 0) {
+							bSaveDatabase1 = true;
+						}
 					}
 				} catch (Exception e) {
 					System.err.println("file writing error. host == [" + host1 + "] / port == [" + port1 + "] / sid == [" + sid1 + "] / user == [" + user1 + "]");
@@ -294,6 +303,9 @@ public class OracleDiffForm {
 				try {
 					if (database2 != null) {
 						filePath2 = FileUtil.writeFile(database2.toString(), false);
+						if (filePath2 != null && filePath2.length() > 0) {
+							bSaveDatabase2 = true;
+						}
 					}
 				} catch (Exception e) {
 					System.err.println("file writing error. host == [" + host2 + "] / port == [" + port2 + "] / sid == [" + sid2 + "] / user == [" + user2 + "]");
@@ -350,20 +362,27 @@ public class OracleDiffForm {
 		display.dispose();
 		
 		
-		StringMap keyValueMap = new StringMap();
-		keyValueMap.put("asis_host", host1);
-		keyValueMap.put("asis_port", port1);
-		keyValueMap.put("asis_sid", sid1);
-		keyValueMap.put("asis_user", user1);
-		keyValueMap.put("asis_password", password1);
-		
-		keyValueMap.put("tobe_host", host2);
-		keyValueMap.put("tobe_port", port2);
-		keyValueMap.put("tobe_sid", sid2);
-		keyValueMap.put("tobe_user", user2);
-		keyValueMap.put("tobe_password", password2);
-		
-		PropertiesUtil.modifyPropertiesFile(CommonConst.propFilePath, keyValueMap);
+		// option.properties 파일 쓰기
+		if (bSaveDatabase1 || bSaveDatabase2) {
+			StringMap keyValueMap = new StringMap();
+			if (bSaveDatabase1) {
+				keyValueMap.put("asis_host", host1);
+				keyValueMap.put("asis_port", port1);
+				keyValueMap.put("asis_sid", sid1);
+				keyValueMap.put("asis_user", user1);
+				keyValueMap.put("asis_password", password1);
+			}
+			
+			if (bSaveDatabase2) {
+				keyValueMap.put("tobe_host", host2);
+				keyValueMap.put("tobe_port", port2);
+				keyValueMap.put("tobe_sid", sid2);
+				keyValueMap.put("tobe_user", user2);
+				keyValueMap.put("tobe_password", password2);
+			}
+			
+			PropertiesUtil.modifyPropertiesFile(CommonConst.propFilePath, keyValueMap);
+		}
 		
 		
 		System.out.println("종료");
