@@ -17,6 +17,8 @@ import com.bb.dbdiff.dbdata.Sequence;
 import com.bb.dbdiff.dbdata.SequenceList;
 import com.bb.dbdiff.dbdata.Table;
 import com.bb.dbdiff.dbdata.TableList;
+import com.bb.dbdiff.dbdata.View;
+import com.bb.dbdiff.dbdata.ViewList;
 import com.bb.dbdiff.prototype.StringMap;
 import com.bb.dbdiff.prototype.StringMapList;
 import com.bb.dbdiff.sql.BBOracleMapper;
@@ -93,6 +95,13 @@ public class OracleInfoController {
 			// ALL_OBJECTS
 			// DBA_OBJECTS
 			// USER_OBJECTS
+			
+			// 뷰 가져오기
+			String viewSql = " SELECT object_name, status FROM USER_OBJECTS where object_type = 'VIEW' ";
+			StringMapList viewMapList = bbOraMapper.select(conn, viewSql, null);
+			ViewList viewList = makeViewList(viewMapList);
+			setColumnListToViewList(columnMapList, viewList);
+			database.setViewList(viewList);
 
 			// 시퀀스 가져오기
 			String sequenceSql = " SELECT object_name, status FROM USER_OBJECTS where object_type = 'SEQUENCE' ";
@@ -168,6 +177,10 @@ public class OracleInfoController {
 			return;
 		}
 		
+		if (tableList == null || tableList.size() == 0) {
+			return;
+		}
+		
 		StringMap oneMap = null;
 		String oneTableName = "";
 		int count = columnMapList.size();
@@ -213,8 +226,66 @@ public class OracleInfoController {
 	}
 	
 	
+	private void setColumnListToViewList(StringMapList columnMapList, ViewList viewList) {
+		if (columnMapList == null || columnMapList.size() == 0) {
+			return;
+		}
+		
+		if (viewList == null || viewList.size() == 0) {
+			return;
+		}
+		
+		StringMap oneMap = null;
+		String oneViewName = "";
+		int count = columnMapList.size();
+		for (int i=0; i<count; i++) {
+			oneMap = columnMapList.get(i);
+			if (oneMap == null) {
+				continue;
+			}
+			
+			oneViewName = StringUtil.parseString(oneMap.get("table_name"));
+			if (oneViewName == null || oneViewName.length() == 0) {
+				continue;
+			}
+			
+			View oneView = viewList.findView(oneViewName);
+			if (oneView == null) {
+				continue;
+			}
+			
+			String columnName = StringUtil.parseString(oneMap.get("column_name"));
+			String dataType = StringUtil.parseString(oneMap.get("data_type"));
+			int dataLength = StringUtil.parseInt(oneMap.get("data_length"));
+			boolean nullable = StringUtil.parseString(oneMap.get("nullable")).equalsIgnoreCase("Y");
+			int columnId = StringUtil.parseInt(oneMap.get("column_id"));
+			
+			Column column = new Column();
+			column.setViewName(oneViewName);
+			column.setColumnName(columnName);
+			column.setDataType(dataType);
+			column.setDataLength(dataLength);
+			column.setNullable(nullable);
+			column.setColumnId(columnId);
+			
+			if (oneView.getColumnList() == null) {
+				oneView.setColumnList(new ColumnList());
+			}
+			
+			oneView.getColumnList().add(column);
+		}
+		
+		// 뷰 내의 모든 컬럼을 컬럼 아이디 순으로 정렬한다.
+		viewList.sortAllColumnsByColumnId();
+	}
+	
+	
 	private void setIndexListToTableList(StringMapList indexMapList, TableList tableList) {
 		if (indexMapList == null || indexMapList.size() == 0) {
+			return;
+		}
+		
+		if (tableList == null || tableList.size() == 0) {
 			return;
 		}
 		
@@ -278,7 +349,7 @@ public class OracleInfoController {
 			indexConditionList.add(indexCondition);
 		}
 		
-		// 인덱스를 오름차순으로 정렬한다.
+		// 인덱스를 이름 기준으로 오름차순 정렬한다.
 		tableList.sortAllIndexListByName();
 		
 		// 인덱스 조건을 컬럼 위치 순으로 정렬한다.
@@ -316,7 +387,7 @@ public class OracleInfoController {
 			functionList.add(function);
 		}
 		
-		// 함수를 오름차순으로 정렬한다.
+		// 함수를 이름 기준으로 오름차순 정렬한다.
 		functionList.sortByName();
 		return functionList;
 	}
@@ -351,7 +422,7 @@ public class OracleInfoController {
 			procedureList.add(procedure);
 		}
 		
-		// 프로시저를 오름차순으로 정렬한다.
+		// 프로시저를 이름 기준으로 오름차순 정렬한다.
 		procedureList.sortByName();
 		return procedureList;
 	}
@@ -387,8 +458,43 @@ public class OracleInfoController {
 			sequenceList.add(sequence);
 		}
 		
-		// 시퀀스를 오름차순으로 정렬한다.
+		// 시퀀스를 이름 기준으로 오름차순 정렬한다.
 		sequenceList.sortByName();
 		return sequenceList;
+	}
+	
+	private ViewList makeViewList(StringMapList viewMapList) {
+		if (viewMapList == null || viewMapList.size() == 0) {
+			return null;
+		}
+		
+		ViewList viewList = new ViewList();
+		
+		StringMap oneMap = null;
+		String oneViewName = "";
+		int count = viewMapList.size();
+		for (int i=0; i<count; i++) {
+			oneMap = viewMapList.get(i);
+			if (oneMap == null) {
+				continue;
+			}
+			
+			oneViewName = StringUtil.parseString(oneMap.get("object_name"));
+			if (oneViewName == null || oneViewName.length() == 0) {
+				continue;
+			}
+			
+			String oneStatus = StringUtil.parseString(oneMap.get("status"));
+			
+			View view = new View();
+			view.setViewName(oneViewName);
+			view.setStatus(oneStatus);
+			
+			viewList.add(view);
+		}
+		
+		// 뷰를 이름 기준으로 오름차순 정렬한다.
+		viewList.sortByName();
+		return viewList;
 	}
 }

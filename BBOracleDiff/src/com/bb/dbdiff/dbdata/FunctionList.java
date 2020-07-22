@@ -23,7 +23,7 @@ public class FunctionList extends ArrayList<Function> {
 	
 	
 	/**
-	 * 함수를 오름차순으로 정렬한다.
+	 * 함수를 이름 기준으로 오름차순 정렬한다.
 	 */
 	public void sortByName() {
 		Collections.sort(this, new Comparator<Function>() {

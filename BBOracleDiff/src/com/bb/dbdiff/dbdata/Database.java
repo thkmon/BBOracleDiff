@@ -10,6 +10,7 @@ public class Database {
 	private String password = "";
 	
 	private TableList tableList = null;
+	private ViewList viewList = null;
 	private SequenceList sequenceList = null;
 	private FunctionList functionList = null;
 	private ProcedureList procedureList = null;
@@ -36,6 +37,11 @@ public class Database {
 		
 		if (tableList != null && tableList.size() > 0) {
 			buff.append(tableList.toString());
+		}
+		
+		if (viewList != null && viewList.size() > 0) {
+			buff.append(viewList.toString());
+			buff.append("\n");
 		}
 		
 		if (sequenceList != null && sequenceList.size() > 0) {
@@ -115,34 +121,44 @@ public class Database {
 	public void setTableList(TableList tableList) {
 		this.tableList = tableList;
 	}
-
-
-	public FunctionList getFunctionList() {
-		return functionList;
+	
+	
+	public ViewList getViewList() {
+		return viewList;
 	}
-
-
-	public void setFunctionList(FunctionList functionList) {
-		this.functionList = functionList;
+	
+	
+	public void setViewList(ViewList viewList) {
+		this.viewList = viewList;
 	}
-
-
-	public ProcedureList getProcedureList() {
-		return procedureList;
-	}
-
-
-	public void setProcedureList(ProcedureList procedureList) {
-		this.procedureList = procedureList;
-	}
-
-
+	
+	
 	public SequenceList getSequenceList() {
 		return sequenceList;
 	}
-
-
+	
+	
 	public void setSequenceList(SequenceList sequenceList) {
 		this.sequenceList = sequenceList;
+	}
+	
+	
+	public FunctionList getFunctionList() {
+		return functionList;
+	}
+	
+	
+	public void setFunctionList(FunctionList functionList) {
+		this.functionList = functionList;
+	}
+	
+	
+	public ProcedureList getProcedureList() {
+		return procedureList;
+	}
+	
+	
+	public void setProcedureList(ProcedureList procedureList) {
+		this.procedureList = procedureList;
 	}
 }

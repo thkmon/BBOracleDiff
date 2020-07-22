@@ -23,6 +23,12 @@ public class TableList extends ArrayList<Table> {
 	}
 	
 	
+	/**
+	 * 테이블을 이름으로 찾는다.
+	 * 
+	 * @param tableName
+	 * @return
+	 */
 	public Table findTable(String tableName) {
 		Table oneTable = null;
 		int count = this.size();
@@ -40,7 +46,7 @@ public class TableList extends ArrayList<Table> {
 	
 	
 	/**
-	 * 테이블을 오름차순으로 정렬한다.
+	 * 테이블을 이름 기준으로 오름차순 정렬한다.
 	 */
 	public void sortByName() {
 		Collections.sort(this, new Comparator<Table>() {
@@ -69,7 +75,7 @@ public class TableList extends ArrayList<Table> {
 	
 	
 	/**
-	 * 인덱스를 오름차순으로 정렬한다.
+	 * 인덱스를 이름 기준으로 오름차순 정렬한다.
 	 */
 	public void sortAllIndexListByName() {
 		Table oneTable = null;

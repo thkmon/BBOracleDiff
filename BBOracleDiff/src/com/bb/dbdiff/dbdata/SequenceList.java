@@ -23,7 +23,7 @@ public class SequenceList extends ArrayList<Sequence> {
 	
 	
 	/**
-	 * 시퀀스를 오름차순으로 정렬한다.
+	 * 시퀀스를 이름 기준으로 오름차순 정렬한다.
 	 */
 	public void sortByName() {
 		Collections.sort(this, new Comparator<Sequence>() {
