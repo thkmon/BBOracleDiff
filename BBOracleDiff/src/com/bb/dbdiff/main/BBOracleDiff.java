@@ -45,7 +45,7 @@ public class BBOracleDiff {
 					
 					CommonConst.compareToolPath = StringUtil.parseString(propMap.get("compare_tool_path")).trim();
 					
-					// 리눅스 OS타입 추가. 리눅스일 경우 option.properties 정보를 토대로 DB 접속하여 output 파일 생성
+					// 리눅스 OS타입 추가. 리눅스일 경우 output 파일 생성
 					if (osType != null && osType.equalsIgnoreCase("linux")) {
 						bWindowMode = false;
 						System.out.println("os_type : linux");
