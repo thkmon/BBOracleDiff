@@ -27,7 +27,13 @@ public class BBOracleMapper {
 			}
 			
 			// url ex : "jdbc:oracle:thin:@000.000.000.000:1521:orcl"
-			String url = "jdbc:oracle:thin:@" + database.getHost() + ":" + database.getPort() + ":" + database.getSid();
+			String url = "";
+			if (database.getSid() != null && database.getSid().length() > 0) {
+				url = "jdbc:oracle:thin:@" + database.getHost() + ":" + database.getPort() + ":" + database.getSid();
+			} else if (database.getServiceName() != null && database.getServiceName().length() > 0) {
+				url = "jdbc:oracle:thin:@" + database.getHost() + ":" + database.getPort() + "/" + database.getServiceName();
+			}
+			
 			conn = DriverManager.getConnection(url, database.getUser(), database.getPassword());
 
 		} catch (Exception ex) {

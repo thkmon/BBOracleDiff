@@ -29,18 +29,20 @@ public class BBOracleDiff {
 					String host1 = StringUtil.parseString(propMap.get("asis_host")).trim();
 					String port1 = StringUtil.parseString(propMap.get("asis_port")).trim();
 					String sid1 = StringUtil.parseString(propMap.get("asis_sid")).trim();
+					String serviceName1 = StringUtil.parseString(propMap.get("asis_servicename")).trim();
 					String user1 = StringUtil.parseString(propMap.get("asis_user")).trim();
 					String password1 = StringUtil.parseString(propMap.get("asis_password")).trim();
 					
-					database1 = new Database(host1, port1, sid1, user1, password1);
+					database1 = new Database(host1, port1, sid1, serviceName1, user1, password1);
 					
 					String host2 = StringUtil.parseString(propMap.get("tobe_host")).trim();
 					String port2 = StringUtil.parseString(propMap.get("tobe_port")).trim();
 					String sid2 = StringUtil.parseString(propMap.get("tobe_sid")).trim();
+					String serviceName2 = StringUtil.parseString(propMap.get("tobe_servicename")).trim();
 					String user2 = StringUtil.parseString(propMap.get("tobe_user")).trim();
 					String password2 = StringUtil.parseString(propMap.get("tobe_password")).trim();
 					
-					database2 = new Database(host2, port2, sid2, user2, password2);
+					database2 = new Database(host2, port2, sid2, serviceName2, user2, password2);
 					
 					CommonConst.compareToolPath = StringUtil.parseString(propMap.get("compare_tool_path")).trim();
 					
@@ -52,17 +54,25 @@ public class BBOracleDiff {
 						
 						System.out.println("host1 : " + host1);
 						System.out.println("port1 : " + port1);
-						System.out.println("sid1 : " + sid1);
+						if (sid1 != null && sid1.length() > 0) {
+							System.out.println("sid1 : " + sid1);
+						} else if (serviceName1 != null && serviceName1.length() > 0) {
+							System.out.println("serviceName1 : " + serviceName1);
+						}
 						System.out.println("user1 : " + user1);
 						System.out.println("");
 						
 						System.out.println("host2 : " + host2);
 						System.out.println("port2 : " + port2);
-						System.out.println("sid2 : " + sid2);
+						if (sid2 != null && sid2.length() > 0) {
+							System.out.println("sid2 : " + sid2);
+						} else if (serviceName2 != null && serviceName2.length() > 0) {
+							System.out.println("serviceName2 : " + serviceName2);
+						}
 						System.out.println("user2 : " + user2);
 						
 						OracleDiffController oracleDiffController = new OracleDiffController();
-						oracleDiffController.doDiff(host1, port1, sid1, user1, password1, host2, port2, sid2, user2, password2);
+						oracleDiffController.doDiff(host1, port1, sid1, serviceName1, user1, password1, host2, port2, sid2, serviceName2, user2, password2);
 					}
 				}
 				

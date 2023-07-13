@@ -9,16 +9,16 @@ import com.bb.dbdiff.util.FileUtil;
 
 public class OracleDiffController {
 
-	public int[] doDiff(String host1, String port1, String sid1, String user1, String password1,
-						String host2, String port2, String sid2, String user2, String password2) {
+	public int[] doDiff(String host1, String port1, String sid1, String serviceName1, String user1, String password1,
+						String host2, String port2, String sid2, String serviceName2, String user2, String password2) {
 		
 		int[] saveDatabaseArr = new int[2];
 		saveDatabaseArr[0] = 0;
 		saveDatabaseArr[1] = 0;
 		
 		OracleInfoController oracleInfoCtrl = new OracleInfoController();
-		Database database1 = oracleInfoCtrl.getOracleDatabaseInfo(host1, port1, sid1, user1, password1);
-		Database database2 = oracleInfoCtrl.getOracleDatabaseInfo(host2, port2, sid2, user2, password2);
+		Database database1 = oracleInfoCtrl.getOracleDatabaseInfo(host1, port1, sid1, serviceName1, user1, password1);
+		Database database2 = oracleInfoCtrl.getOracleDatabaseInfo(host2, port2, sid2, serviceName2, user2, password2);
 		
 		String filePath1 = "";
 		String filePath2 = "";
@@ -30,7 +30,11 @@ public class OracleDiffController {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("file writing error. host == [" + host1 + "] / port == [" + port1 + "] / sid == [" + sid1 + "] / user == [" + user1 + "]");
+			if (sid1 != null && sid1.length() > 0) {
+				System.err.println("file writing error. host1 == [" + host1 + "] / port1 == [" + port1 + "] / sid1 == [" + sid1 + "] / user1 == [" + user1 + "]");
+			} else if (serviceName1 != null && serviceName1.length() > 0) {
+				System.err.println("file writing error. host1 == [" + host1 + "] / port1 == [" + port1 + "] / serviceName1 == [" + serviceName1 + "] / user1 == [" + user1 + "]");
+			}
 			return saveDatabaseArr;
 		}
 		
@@ -42,7 +46,11 @@ public class OracleDiffController {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println("file writing error. host == [" + host2 + "] / port == [" + port2 + "] / sid == [" + sid2 + "] / user == [" + user2 + "]");
+			if (sid2 != null && sid2.length() > 0) {
+				System.err.println("file writing error. host2 == [" + host2 + "] / port2 == [" + port2 + "] / sid2 == [" + sid2 + "] / user2 == [" + user2 + "]");
+			} else if (serviceName2 != null && serviceName2.length() > 0) {
+				System.err.println("file writing error. host2 == [" + host2 + "] / port2 == [" + port2 + "] / serviceName2 == [" + serviceName2 + "] / user2 == [" + user2 + "]");
+			}
 			return saveDatabaseArr;
 		}
 		

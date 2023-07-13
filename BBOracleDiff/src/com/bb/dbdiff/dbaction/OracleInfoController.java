@@ -28,7 +28,7 @@ import com.bb.dbdiff.util.StringUtil;
 public class OracleInfoController {
 	
 	
-	public Database getOracleDatabaseInfo(String host, String port, String sid, String user, String password) {
+	public Database getOracleDatabaseInfo(String host, String port, String sid, String serviceName, String user, String password) {
 		if (host == null || host.trim().length() == 0) {
 			System.err.println("getOracleDatabaseInfo : host is null or empty.");
 			return null;
@@ -44,8 +44,12 @@ public class OracleInfoController {
 		}
 		
 		if (sid == null || sid.trim().length() == 0) {
-			System.err.println("getOracleDatabaseInfo : sid is null or empty.");
-			return null;
+			if (serviceName == null || serviceName.trim().length() == 0) {
+				System.err.println("getOracleDatabaseInfo : sid and serviceName are null or empty.");
+				return null;
+			} else {
+				serviceName = serviceName.trim();
+			}
 		} else {
 			sid = sid.trim();
 		}
@@ -67,7 +71,7 @@ public class OracleInfoController {
 		Connection conn = null;
 		
 		try {
-			database = makeDatabase(host, port, sid, user, password);
+			database = makeDatabase(host, port, sid, serviceName, user, password);
 			
 			BBOracleMapper bbOraMapper = new BBOracleMapper();
 			conn = bbOraMapper.getConnection(database);
@@ -139,8 +143,8 @@ public class OracleInfoController {
 	}
 	
 	
-	private Database makeDatabase(String host, String port, String sid, String user, String password) {
-		Database database = new Database(host, port, sid, user, password);
+	private Database makeDatabase(String host, String port, String sid, String serviceName, String user, String password) {
+		Database database = new Database(host, port, sid, serviceName, user, password);
 		return database;
 	}
 	

@@ -5,6 +5,7 @@ public class Database {
 	private String host = "";
 	private String port = "";
 	private String sid = "";
+	private String serviceName = "";
 	
 	private String user = "";
 	private String password = "";
@@ -16,10 +17,11 @@ public class Database {
 	private ProcedureList procedureList = null;
 	
 	
-	public Database(String host, String port, String sid, String user, String password) {
+	public Database(String host, String port, String sid, String serviceName, String user, String password) {
 		this.host = host;
 		this.port = port;
 		this.sid = sid;
+		this.serviceName = serviceName;
 		
 		this.user = user;
 		this.password = password;
@@ -30,7 +32,11 @@ public class Database {
 		StringBuffer buff = new StringBuffer();
 		buff.append("host : " + host).append(" / ");
 		buff.append("port : " + port).append(" / ");
-		buff.append("sid : " + sid).append(" / ");
+		if (sid != null && sid.length() > 0) {
+			buff.append("sid : " + sid).append(" / ");
+		} else if (serviceName != null && serviceName.length() > 0) {
+			buff.append("serviceName : " + serviceName).append(" / ");
+		}
 		buff.append("user : " + user);
 		return buff.toString();
 	}
@@ -41,7 +47,11 @@ public class Database {
 		StringBuffer buff = new StringBuffer();
 		buff.append("host : " + host).append("\n");
 		buff.append("port : " + port).append("\n");
-		buff.append("sid : " + sid).append("\n");
+		if (sid != null && sid.length() > 0) {
+			buff.append("sid : " + sid).append("\n");
+		} else if (serviceName != null && serviceName.length() > 0) {
+			buff.append("serviceName : " + serviceName).append("\n");
+		}
 		buff.append("user : " + user).append("\n");
 		buff.append("\n");
 		
@@ -100,6 +110,16 @@ public class Database {
 
 	public void setSid(String sid) {
 		this.sid = sid;
+	}
+	
+	
+	public String getServiceName() {
+		return serviceName;
+	}
+	
+	
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
 	}
 
 
