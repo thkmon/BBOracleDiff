@@ -45,6 +45,7 @@ public class BBOracleDiff {
 					
 					CommonConst.compareToolPath = StringUtil.parseString(propMap.get("compare_tool_path")).trim();
 					
+					/*
 					// 리눅스 OS타입 추가. 리눅스일 경우 output 파일 생성
 					if (osType != null && osType.equalsIgnoreCase("linux")) {
 						bWindowMode = false;
@@ -72,6 +73,7 @@ public class BBOracleDiff {
 						System.out.println("bSaveDatabase1 :" + bSaveDatabase1);
 						System.out.println("filePath1 : " + filePath1);
 					}
+					*/
 				}
 				
 			} catch (Exception e) {
