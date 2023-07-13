@@ -314,36 +314,66 @@ public class OracleDiffForm {
 				
 				if ((filePath1 != null && filePath1.length() > 0) || (filePath2 != null && filePath2.length() > 0)) {
 					
-					String compareToolPath = getWinmergePath();
+					String compareToolPath = getCompareToolPath();
 					
-					if (compareToolPath != null && compareToolPath.length() > 0) {
+					boolean isSuccess = false;
+					
+					// 파일비교툴이 존재하고 파일경로1, 파일경로2가 존재하는 경우에만 파일비교툴 실행하기
+					if ((compareToolPath != null && compareToolPath.length() > 0) && (filePath1 != null && filePath1.length() > 0) && (filePath2 != null && filePath2.length() > 0)) {
 						try {
-							ProcessBuilder builder = new ProcessBuilder();
+							boolean hasCompareTool = false;
+							if (compareToolPath.indexOf("/") > -1 || compareToolPath.indexOf("\\") > -1) {
+								if (new File(compareToolPath).exists()) {
+									hasCompareTool = true;
+								} else {
+									hasCompareTool = false;
+									System.err.println("The tool does not exist at that path. compare_tool_path == [" + compareToolPath + "]");
+								}
+							} else {
+								hasCompareTool = true;
+							}
 							
-							ArrayList<String> argList = new ArrayList<String>();
-							argList.add(compareToolPath);
-							if (filePath1 != null && filePath1.length() > 0) {
+							if (hasCompareTool) {
+								ProcessBuilder builder = new ProcessBuilder();
+								ArrayList<String> argList = new ArrayList<String>();
+								argList.add(compareToolPath);
 								argList.add(filePath1);
-							} else {
-								File emptyFile = new File("data/empty.txt");
-								argList.add(emptyFile.getAbsolutePath());
-							}
-							
-							if (filePath2 != null && filePath2.length() > 0) {
 								argList.add(filePath2);
-							} else {
-								File emptyFile = new File("data/empty.txt");
-								argList.add(emptyFile.getAbsolutePath());
+								
+								builder.command(argList);
+								builder.start();
+								
+								isSuccess = true;
 							}
-					
-							builder.command(argList);
-							builder.start();
 							
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-					} else {
-						System.err.println("compareToolPath is null or empty.");
+					}
+					
+					if (!isSuccess) {
+						try {
+							if (filePath1 != null && filePath1.length() > 0) {
+								ProcessBuilder builder1 = new ProcessBuilder();
+								ArrayList<String> argList1 = new ArrayList<String>();
+								argList1.add("notepad");
+								argList1.add(filePath1);
+								builder1.command(argList1);
+								builder1.start();
+							}
+							
+							if (filePath2 != null && filePath2.length() > 0) {
+								ProcessBuilder builder2 = new ProcessBuilder();
+								ArrayList<String> argList2 = new ArrayList<String>();
+								argList2.add("notepad");
+								argList2.add(filePath2);
+								builder2.command(argList2);
+								builder2.start();
+							}
+							
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -389,7 +419,7 @@ public class OracleDiffForm {
 	}
 	
 	
-	private static String getWinmergePath() {
+	private static String getCompareToolPath() {
 		String compareToolPath = "";
 		
 		// 윈머지 경로를 프로퍼티 파일에서 가져오도록 처리한다.
