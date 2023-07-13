@@ -26,6 +26,16 @@ public class Database {
 	}
 	
 	
+	public String getConnectionInfo() {
+		StringBuffer buff = new StringBuffer();
+		buff.append("host : " + host).append(" / ");
+		buff.append("port : " + port).append(" / ");
+		buff.append("sid : " + sid).append(" / ");
+		buff.append("user : " + user);
+		return buff.toString();
+	}
+	
+	
 	@Override
 	public String toString() {
 		StringBuffer buff = new StringBuffer();

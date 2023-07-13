@@ -72,6 +72,11 @@ public class OracleInfoController {
 			BBOracleMapper bbOraMapper = new BBOracleMapper();
 			conn = bbOraMapper.getConnection(database);
 			
+			if (conn == null) {
+				System.err.println("getConnection is fail. database == [" + (database != null ? database.getConnectionInfo() : "") + "]");
+				return null;
+			}
+			
 			// 테이블 가져오기
 			String tableSql = " SELECT table_name FROM TABS ";
 			StringMapList tableMapList = bbOraMapper.select(conn, tableSql, null);
