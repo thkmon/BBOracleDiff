@@ -4,10 +4,9 @@ import java.io.File;
 import java.util.HashMap;
 
 import com.bb.dbdiff.common.CommonConst;
-import com.bb.dbdiff.dbaction.OracleInfoController;
+import com.bb.dbdiff.dbaction.OracleDiffController;
 import com.bb.dbdiff.dbdata.Database;
 import com.bb.dbdiff.form.OracleDiffForm;
-import com.bb.dbdiff.util.FileUtil;
 import com.bb.dbdiff.util.PropertiesUtil;
 import com.bb.dbdiff.util.StringUtil;
 
@@ -45,35 +44,26 @@ public class BBOracleDiff {
 					
 					CommonConst.compareToolPath = StringUtil.parseString(propMap.get("compare_tool_path")).trim();
 					
-					/*
-					// 리눅스 OS타입 추가. 리눅스일 경우 output 파일 생성
+					// 리눅스 OS타입 추가. 리눅스일 경우 윈도우폼 표시하지 않고 output 파일 생성
 					if (osType != null && osType.equalsIgnoreCase("linux")) {
 						bWindowMode = false;
 						System.out.println("os_type : linux");
+						System.out.println("");
 						
 						System.out.println("host1 : " + host1);
 						System.out.println("port1 : " + port1);
 						System.out.println("sid1 : " + sid1);
 						System.out.println("user1 : " + user1);
+						System.out.println("");
 						
-						boolean bSaveDatabase1 = false;
-						String filePath1 = "";
-						try {
-							if (database1 != null) {
-								filePath1 = FileUtil.writeFile(database1.toString(), false);
-								if (filePath1 != null && filePath1.length() > 0) {
-									bSaveDatabase1 = true;
-								}
-							}
-						} catch (Exception e) {
-							System.err.println("file writing error. host == [" + host1 + "] / port == [" + port1 + "] / sid == [" + sid1 + "] / user == [" + user1 + "]");
-							return;
-						}
+						System.out.println("host2 : " + host2);
+						System.out.println("port2 : " + port2);
+						System.out.println("sid2 : " + sid2);
+						System.out.println("user2 : " + user2);
 						
-						System.out.println("bSaveDatabase1 :" + bSaveDatabase1);
-						System.out.println("filePath1 : " + filePath1);
+						OracleDiffController oracleDiffController = new OracleDiffController();
+						oracleDiffController.doDiff(host1, port1, sid1, user1, password1, host2, port2, sid2, user2, password2);
 					}
-					*/
 				}
 				
 			} catch (Exception e) {
