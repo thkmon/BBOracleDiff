@@ -3,12 +3,16 @@ package com.bb.dbdiff.main;
 import java.io.File;
 import java.util.HashMap;
 
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 import com.bb.dbdiff.common.CommonConst;
 import com.bb.dbdiff.dbaction.OracleDiffController;
 import com.bb.dbdiff.dbdata.Database;
 import com.bb.dbdiff.form.OracleDiffForm;
 import com.bb.dbdiff.util.PropertiesUtil;
 import com.bb.dbdiff.util.StringUtil;
+import com.formdev.flatlaf.FlatLightLaf;
 
 public class BBOracleDiff {
 
@@ -82,9 +86,23 @@ public class BBOracleDiff {
 		}
 		
 		if (bWindowMode) {
-			// 윈도우를 띄운다.
-			OracleDiffForm diffForm = new OracleDiffForm();
-			diffForm.openForm(database1, database2);
+			try {
+				FlatLightLaf.setup();
+				UIManager.put("Button.arc", 0);
+				UIManager.put("Component.arc", 0);
+				UIManager.put("TextComponent.arc", 0);
+			} catch (Exception e) {
+				System.err.println("FlatLaf initialization failed: " + e.getMessage());
+			}
+
+			final Database initialDatabase1 = database1;
+			final Database initialDatabase2 = database2;
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					OracleDiffForm diffForm = new OracleDiffForm();
+					diffForm.openForm(initialDatabase1, initialDatabase2);
+				}
+			});
 		}
 	}
 }
